@@ -1,0 +1,68 @@
+<div class="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md">
+    <!-- Relógio -->
+    <div id="clock" class="text-center text-gray-600 text-sm mb-2"></div>
+
+    <!-- Título -->
+    <h1 class="text-2xl font-bold mb-4 text-center">Lista de Tarefas</h1>
+
+    <!-- Input de tarefa -->
+    <div class="flex gap-2 mb-4">
+        <form id="taskForm" method="post" action="/createtask">
+            <input
+                id="taskInput"
+                type="text"
+                name="task"
+                placeholder="Digite uma tarefa"
+                class="flex-1 p-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-400"
+            />
+            <button
+                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+            >
+                Adicionar
+            </button>
+        </form>
+    </div>
+
+    <!-- Lista de tarefas -->
+    {{#if task }}
+        
+            <div class="space-y-2">
+                {{#each task}}
+                <div class="flex items-center gap-2 p-2 border rounded-lg bg-gray-50">
+                    <input 
+                    type="checkbox"
+                    name="isDone"
+                    value="{{id}}" 
+                    {{#if isdone}} 
+                    checked 
+                    {{/if}}
+                    onchange="markDone(this)"
+                      class="form-checkbox h-5 w-5 text-blue-600">
+                    <span class="flex-1">
+                        {{task}}
+                    </span>
+                </div>
+                {{/each}}
+            </div>
+        
+            {{else}}
+            <div class="flex items-center gap-2 p-2 border rounded-lg bg-gray-50">
+                <span class="flex-1 text-gray-500">{{message}}</span>
+            </div>
+    {{/if}}
+  </div>
+
+<script>
+    async function markDone(checkbox){
+        const taskId = checkbox.value
+        const ischecked = checkbox.checked
+
+        const response = await fetch('/markdone',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({taskId, ischecked})
+        })
+    }
+</script>
